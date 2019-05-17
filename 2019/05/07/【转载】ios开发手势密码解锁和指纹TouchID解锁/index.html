@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="越来越多的app都是用指纹解锁（下面都用TouchID表示），现在略微来讲解一下TouchID（文末的demo里TouchID和手势解锁都有，这里只介绍TouchID）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转载】ios开发手势密码解锁和指纹TouchID解锁">
+<meta property="og:url" content="http://yoursite.com/2019/05/07/【转载】ios开发手势密码解锁和指纹TouchID解锁/index.html">
+<meta property="og:site_name" content="Aosic">
+<meta property="og:description" content="越来越多的app都是用指纹解锁（下面都用TouchID表示），现在略微来讲解一下TouchID（文末的demo里TouchID和手势解锁都有，这里只介绍TouchID）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-07T03:40:38.707Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转载】ios开发手势密码解锁和指纹TouchID解锁">
+<meta name="twitter:description" content="越来越多的app都是用指纹解锁（下面都用TouchID表示），现在略微来讲解一下TouchID（文末的demo里TouchID和手势解锁都有，这里只介绍TouchID）">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/07/【转载】ios开发手势密码解锁和指纹TouchID解锁/">
+
+
+
+
+
+  <title>【转载】ios开发手势密码解锁和指纹TouchID解锁 | Aosic</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aosic</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">那日少年薄春衫，明月照银簪。<br> 燕子归去时候，恨风疾云乱。<br> 志未酬，鬓先斑，梦已残。<br> 今生休去，人老沧海，心在天山！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/07/【转载】ios开发手势密码解锁和指纹TouchID解锁/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aosic">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avwangshi.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aosic">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【转载】ios开发手势密码解锁和指纹TouchID解锁</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-07T11:33:31+08:00">
+                2019-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/07/【转载】ios开发手势密码解锁和指纹TouchID解锁/" class="leancloud_visitors" data-flag-title="【转载】ios开发手势密码解锁和指纹TouchID解锁">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>越来越多的app都是用指纹解锁（下面都用TouchID表示），现在略微来讲解一下TouchID（文末的demo里TouchID和手势解锁都有，这里只介绍TouchID）</p>
+<a id="more"></a>
+<p>1.系统所使用TouchID的SDK</p>
+<p>添加引入LocalAuthentication.framework<br>framework主要的内容是这个几个类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- LAContext.h</span><br><span class="line">- LAError.h</span><br><span class="line">- LAPublicDefines.h</span><br><span class="line">- LocalAuthentication.h</span><br></pre></td></tr></table></figure>
+<p>使用的时候直接</p>
+<p>#import &lt;LocalAuthentication/LocalAuthentication.h&gt;</p>
+<p>好了，废话少说，下面来讲主要使用的2个类；</p>
+<p>LAError.h</p>
+<p>错误类型的枚举类，其实是把LAPublicDefines里的kLAError宏放入到了这枚举类中，统一了一下，具体代码注释写的很清晰，在这我加点中文翻译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, LAError)</span><br><span class="line">&#123;</span><br><span class="line">    LAErrorAuthenticationFailed,     // 验证信息出错，就是说你指纹不对</span><br><span class="line">    LAErrorUserCancel               // 用户取消了验证</span><br><span class="line">    LAErrorUserFallback             // 用户点击了手动输入密码的按钮，所以被取消了</span><br><span class="line">    LAErrorSystemCancel             // 被系统取消，就是说你现在进入别的应用了，不在刚刚那个页面，所以没法验证</span><br><span class="line">    LAErrorPasscodeNotSet           // 用户没有设置TouchID</span><br><span class="line">    LAErrorTouchIDNotAvailable      // 用户设备不支持TouchID</span><br><span class="line">    LAErrorTouchIDNotEnrolled       // 用户没有设置手指指纹</span><br><span class="line">    LAErrorTouchIDLockout           // 用户错误次数太多，现在被锁住了</span><br><span class="line">    LAErrorAppCancel                // 在验证中被其他app中断</span><br><span class="line">    LAErrorInvalidContext           // 请求验证出错</span><br><span class="line">&#125; NS_ENUM_AVAILABLE(10_10, 8_0);</span><br></pre></td></tr></table></figure>
+<p>LAContext.h</p>
+<p>想要在自己的项目中使用TouchID，就要用到LAContext.h这个类，<br>最上面的一个枚举</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, LAPolicy)</span><br><span class="line">&#123;</span><br><span class="line">    LAPolicyDeviceOwnerAuthenticationWithBiometrics NS_ENUM_AVAILABLE(NA, 8_0) __WATCHOS_AVAILABLE(3.0) __TVOS_AVAILABLE(10.0) = kLAPolicyDeviceOwnerAuthenticationWithBiometrics,</span><br><span class="line">    LAPolicyDeviceOwnerAuthentication NS_ENUM_AVAILABLE(10_11, 9_0) = kLAPolicyDeviceOwnerAuthentication</span><br><span class="line"></span><br><span class="line">&#125; NS_ENUM_AVAILABLE(10_10, 8_0) __WATCHOS_AVAILABLE(3.0) __TVOS_AVAILABLE(10.0);</span><br></pre></td></tr></table></figure>
+<p>第一个枚举LAPolicyDeviceOwnerAuthenticationWithBiometrics就是说，用的是手指指纹去验证的；NS_ENUM_AVAILABLE(NA, 8_0)iOS8 可用<br>第二个枚举LAPolicyDeviceOwnerAuthentication少了WithBiometrics则是使用TouchID或者密码验证,默认是错误两次指纹或者锁定后,弹出输入密码界面;NS_ENUM_AVAILABLE(10_11, 9_0)iOS 9可用</p>
+<p>接下来是几个实例方法，首先创建LAContext实例对象，使用简单的[LAContext alloc] init]来创建；</p>
+<p>canEvaluatePolicy:error:方法用来检查当前设备是否可用touchID，返回一个BOOL值<br>evaluatePolicy:localizedReason:reply:调用验证方法，注意这里的三个参数：<br>第一个参数policy是要使用上面那个LAPolicy的枚举<br>第二个参数localizedReason是NSString类型的验证理由<br>第三个参数reply则是一个回调Block，block内有一个BOOL类型的success判断是否成功验证，还有一个用于判断错误信息的NSError类型的error<br>invalidate方法用来废止这个context</p>
+<p>参数localizedReason的具体讲解：例如使用的TouchID”XXX”的TouchID 请验证已有指纹，其中的XXX是你app的name，这黑体字部分无法更改，后面的小字部分请验证已有指纹可以通过参数localizedReason自定义；</p>
+<p>LAContext还有一个localizedFallbackTitle，是用来自定义弹出的alert底部右侧的feedback按钮的title，默认是输入密码，如果不想显示 feedback 按钮;可以设置 feedBackTitle = @””，localizedCancelTitle则是自定义取消按钮的title，不过localizedCancelTitle系统10.0才能使用；</p>
+<p>好了下面上代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">LAContext *context = [[LAContext alloc] init];</span><br><span class="line">    context.localizedFallbackTitle = @&quot;验证登录密码&quot;;</span><br><span class="line">    // LAPolicyDeviceOwnerAuthentication</span><br><span class="line">    __weak __typeof(self)weakSelf = self;</span><br><span class="line">    [context evaluatePolicy:policy localizedReason:@&quot;通过Home键验证已有手机指纹&quot; reply:^(BOOL success, NSError * _Nullable error) &#123;</span><br><span class="line"></span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            NSString *message = @&quot;&quot;;</span><br><span class="line">            if (success) &#123;</span><br><span class="line">                message = @&quot;通过了Touch ID 指纹验证&quot;;</span><br><span class="line">                block(YES, NO, message);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                //失败操作</span><br><span class="line">                LAError errorCode = error.code;</span><br><span class="line">                BOOL inputPassword = NO;</span><br><span class="line">                switch (errorCode) &#123;</span><br><span class="line">                    case LAErrorAuthenticationFailed: &#123;</span><br><span class="line">                        // -1</span><br><span class="line">                        [SVProgressHUD showErrorWithStatus:@&quot;指纹不匹配&quot;];</span><br><span class="line">                        message = @&quot;连续三次指纹识别错误&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorUserCancel: &#123;</span><br><span class="line">                        // -2</span><br><span class="line">                        message = @&quot;用户取消验证Touch ID&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorUserFallback: &#123;</span><br><span class="line">                        // -3</span><br><span class="line">                        inputPassword = YES;</span><br><span class="line">                        message = @&quot;用户选择输入密码&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorSystemCancel: &#123;</span><br><span class="line">                        // -4 TouchID对话框被系统取消，例如按下Home或者电源键</span><br><span class="line">                        message = @&quot;取消授权，如其他应用切入&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorPasscodeNotSet: &#123;</span><br><span class="line">                        // -5</span><br><span class="line">                        [SVProgressHUD showErrorWithStatus:@&quot;此设备未设置系统密码&quot;];</span><br><span class="line">                        message = @&quot;设备系统未设置密码&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorTouchIDNotAvailable: &#123;</span><br><span class="line">                        // -6</span><br><span class="line">                        [SVProgressHUD showErrorWithStatus:@&quot;此设备不支持 Touch ID&quot;];</span><br><span class="line">                        message = @&quot;此设备不支持 Touch ID&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorTouchIDNotEnrolled: &#123;</span><br><span class="line">                        // -7</span><br><span class="line">                        [SVProgressHUD showErrorWithStatus:@&quot;用户未录入指纹&quot;];</span><br><span class="line">                        message = @&quot;用户未录入指纹&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorTouchIDLockout: &#123;</span><br><span class="line">                        // -8 连续五次指纹识别错误，TouchID功能被锁定，下一次需要输入系统密码</span><br><span class="line">                        if ([[[UIDevice currentDevice] systemVersion] floatValue] &gt;= 9.0) &#123;</span><br><span class="line">                            [weakSelf openTouchIDWithPolicy:LAPolicyDeviceOwnerAuthentication touchIDBlock:block];</span><br><span class="line">                        &#125;</span><br><span class="line">                        message = @&quot;Touch ID被锁，需要用户输入密码解锁&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorAppCancel: &#123;</span><br><span class="line">                        // -9 如突然来了电话，电话应用进入前台，APP被挂起啦</span><br><span class="line">                        message = @&quot;用户不能控制情况下APP被挂起&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    case LAErrorInvalidContext: &#123;</span><br><span class="line">                        // -10</span><br><span class="line">                        message = @&quot;Touch ID 失效&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                        break;</span><br><span class="line"></span><br><span class="line">                    default:</span><br><span class="line">                        // [SVProgressHUD showErrorWithStatus:@&quot;此设备不支持 Touch ID&quot;];</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+<p>指纹识别的版本问题</p>
+<p>1.iOS 9 之前是没有LAErrorTouchIDLockout锁定这个选项的,默认错误5次后;第6次验证是自动弹出输入密码界面;</p>
+<p>2.iOS 9 之后锁定指纹识别之后,如果需要立即弹出输入密码界面需要使用LAPolicyDeviceOwnerAuthentication这个属性重新发起验证;</p>
+<p>弹窗显示级别问题</p>
+<p>TouchID的弹窗的级别非常之高，高到离谱，经过验证应用程序内部没有比指纹识别的window的级别更高的UIWindowLevel，也就说了他是系统级的弹窗。需要注意的是，如果指纹弹窗显示和消失应用程序会调用： </p>
+<ul>
+<li>(void)applicationWillResignActive:(UIApplication *)application; </li>
+<li>(void)applicationDidBecomeActive:(UIApplication *)application; </li>
+</ul>
+<p>只要你的app进入后台或者打开使用都可以弹出TouchID页面，具体显示逻辑视情况判断；</p>
+<p>目前以上代码足可以满足大多数app中TouchID的使用，不足之处敬请指出；<br>demo地址：<a href="https://github.com/XGPASS/XGTouchDemo" target="_blank" rel="noopener">https://github.com/XGPASS/XGTouchDemo</a></p>
+<h2 id="参考文章：1-2"><a href="#参考文章：1-2" class="headerlink" title="####参考文章：1, 2"></a>####参考文章：<a href="http://www.jianshu.com/p/d44b7d85e0a6" target="_blank" rel="noopener">1</a>, <a href="http://zcill.com/2016/02/29/LocalAuthentication%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/" target="_blank" rel="noopener">2</a></h2><p>作者：开发仔XG<br>来源：CSDN<br>原文：<a href="https://blog.csdn.net/syg90178aw/article/details/62881138" target="_blank" rel="noopener">https://blog.csdn.net/syg90178aw/article/details/62881138</a> </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/05/像tableView一样使用UICollectionView/" rel="next" title="像tableView一样使用UICollectionView">
+                <i class="fa fa-chevron-left"></i> 像tableView一样使用UICollectionView
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/07/原生无法监听html页面滚动的解决办法/" rel="prev" title="原生无法监听html页面滚动的解决办法">
+                原生无法监听html页面滚动的解决办法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avwangshi.png" alt="Aosic">
+            
+              <p class="site-author-name" itemprop="name">Aosic</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章：1-2"><span class="nav-number">1.</span> <span class="nav-text">####参考文章：1, 2</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aosic</span>
+
+  
+</div>
+
+<!-- 新增访客统计代码 -->
+
+<div class="busuanzi-count">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      访问用户： <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+    <div class="powered-by"></div>
+    <span class="site-uv">
+      <i class="fa fa-eye"></i>
+      访问次数： <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+    <!-- 博客字数统计 -->
+    <span class="site-pv">
+      <i class="fa fa-pencil"></i>
+      博客全站共： <span class="post-count">6.1k</span> 字
+    </span>
+</div>
+<!-- 新增访客统计代码 END-->
+
+<!-- 在网页底部添加网站运行时间 -->
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("07/21/2018 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "Run for "+dnum+" Days ";
+        document.getElementById("times").innerHTML = hnum + " Hours " + mnum + " m " + snum + " s";
+    }
+setInterval("createtime()",250);
+</script>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("DYUfD9W3sqMHQRfY7T8jUmU1-gzGzoHsz", "kwIdVluFzoVhoY1NyYhejJ5p");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
