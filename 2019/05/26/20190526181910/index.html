@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Aosic">
 <meta property="og:description" content="绘制谈到分时与K线，就避免不了绘制。在iOS中，软件绘图可以由以下两种途径来完成。  重写drawRect:方法 使用CAShpeLayer配合UIBezierPath">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-26T11:40:32.625Z">
+<meta property="og:updated_time" content="2019-05-26T11:43:38.242Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS中关于分时K线绘制">
 <meta name="twitter:description" content="绘制谈到分时与K线，就避免不了绘制。在iOS中，软件绘图可以由以下两种途径来完成。  重写drawRect:方法 使用CAShpeLayer配合UIBezierPath">
@@ -440,7 +440,7 @@
 <p>对于x轴来说，每绘制一个点需要偏移width/240。</p>
 <p>关于y轴最大最小值得计算，每只股票都会返回最高价、最低价和昨收价。</p>
 <p>Y轴的中心是昨收价，差值=MAX(fabs(最高价-昨收), fabs(最低价-昨收))。</p>
-<p>则分时每个点Y轴的计算公式 y = v <em> height / 2 </em> 差值。</p>
+<p>则分时每个点Y轴的计算公式 y = v x height / 2 x 差值。</p>
 <p>分时的趋势，包含了一条折线和一个折线背景区域。</p>
 <p>通常情况下折线是直接使用一个CAShpeLayer将点连起来，背景区域是另外一个闭合的CAShpeLayer。但是如果这个背景区域是渐变的，就需要使用另外一个渐变Layer用这个闭合的折线区域将其裁剪。</p>
 <h3 id="成交量"><a href="#成交量" class="headerlink" title="成交量"></a>成交量</h3><h3 id="长按十字光标"><a href="#长按十字光标" class="headerlink" title="长按十字光标"></a>长按十字光标</h3><p>TODO: 未完待续</p>
