@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Aosic">
 <meta property="og:description" content="绘制谈到分时与K线，就避免不了绘制。在iOS中，软件绘图可以由以下两种途径来完成。  重写drawRect:方法 使用CAShpeLayer配合UIBezierPath">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-26T11:32:45.483Z">
+<meta property="og:updated_time" content="2019-05-26T11:40:32.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS中关于分时K线绘制">
 <meta name="twitter:description" content="绘制谈到分时与K线，就避免不了绘制。在iOS中，软件绘图可以由以下两种途径来完成。  重写drawRect:方法 使用CAShpeLayer配合UIBezierPath">
@@ -377,13 +377,13 @@
 <li>使用CAShpeLayer配合UIBezierPath</li>
 </ol>
 <a id="more"></a>
-<h2 id="绘制方法对比"><a href="#绘制方法对比" class="headerlink" title="绘制方法对比"></a>绘制方法对比</h2><h3 id="drawRect"><a href="#drawRect" class="headerlink" title="drawRect"></a>drawRect</h3><ol>
+<h2 id="绘制方法对比"><a href="#绘制方法对比" class="headerlink" title="绘制方法对比"></a>绘制方法对比</h2><h3 id="重写drawRect"><a href="#重写drawRect" class="headerlink" title="重写drawRect"></a>重写drawRect</h3><ol>
 <li>属于CoreGraphics框架，占用CPU、性能消耗大，如果没有需求不建议使用。</li>
 <li>CoreGraphics是一个CAPI的框架，它是面向过程的，她复杂难用。</li>
 <li>复杂难用的它可以通过组合完成各种复杂的任务，且不需要再原基础上牺牲很多性能。</li>
 <li>难实现动画。</li>
 </ol>
-<h3 id="CAShapeLayer"><a href="#CAShapeLayer" class="headerlink" title="CAShapeLayer"></a>CAShapeLayer</h3><ol>
+<h3 id="使用CAShapeLayer"><a href="#使用CAShapeLayer" class="headerlink" title="使用CAShapeLayer"></a>使用CAShapeLayer</h3><ol>
 <li>属于CoreAnimation框架，通过GPU来渲染图形，不消耗内存节省性能。</li>
 <li>CoreAnimation为这些图形类型的绘制提供了专门的类，并给他们提供了硬件加速支持。CAShpeLayer用来绘制形状，CATextLayer用来绘制文本，CAGradientLayer用来绘制渐变。它们都是面向对象的，相对于C的API便于使用。</li>
 <li>关于复杂的例如裁剪较多的绘制，心有余而力不逮。这个时候还是老实重写drawRect吧。</li>
@@ -419,8 +419,9 @@
 </table>
 <p>按照交易所1分钟1条数据的快照，在正常的交易日内沪市的股票一共会有241条数据，这会是我们接下来绘制分时的一个依赖之一。</p>
 <h3 id="分时图"><a href="#分时图" class="headerlink" title="分时图"></a>分时图</h3><blockquote>
-<p>分时图是指大盘和个股的动态实时（即时）分时走势图，其在实战研判中的地位极其重要，是即时把握多空力量转化即市场变化直接的根本所在。<br>整个分时图的组成如下<br><a href="https://baike.baidu.com/item/分时图/11004740?fr=aladdin" target="_blank" rel="noopener">百度百科</a></p>
+<p>分时图是指大盘和个股的动态实时（即时）分时走势图，其在实战研判中的地位极其重要，是即时把握多空力量转化即市场变化直接的根本所在。<br><a href="https://baike.baidu.com/item/分时图/11004740?fr=aladdin" target="_blank" rel="noopener">百度百科</a></p>
 </blockquote>
+<p>整个分时图的组成如下</p>
 <ol>
 <li>图框</li>
 <li>分时趋势</li>
@@ -434,7 +435,7 @@
 <li>成交量y轴</li>
 <li>长按十字光标与提示信息</li>
 </ol>
-<h3 id="图框"><a href="#图框" class="headerlink" title="图框"></a>图框</h3><p>图框包含了闭合的外框，内部横竖的虚线框。应该使用两个CAShpeLayer，一个用来绘制外框，一个用来绘制虚线框。关于有规律的layer，有兴趣的可以去了解下复制浮层。</p>
+<h3 id="图框"><a href="#图框" class="headerlink" title="图框"></a>图框</h3><p>图框包含了闭合的外框，内部横竖的虚线框。应该使用两个CAShpeLayer，一个用来绘制外框，一个用来绘制虚线框。关于有规律的layer，有兴趣的可以去了解下复制图层。</p>
 <h3 id="分时趋势"><a href="#分时趋势" class="headerlink" title="分时趋势"></a>分时趋势</h3><p>进行分时趋势的绘制时，在已经确定的图框的基础上需要结合数据确定x轴与y轴，241条数据均匀的分布在图框上。</p>
 <p>对于x轴来说，每绘制一个点需要偏移width/240。</p>
 <p>关于y轴最大最小值得计算，每只股票都会返回最高价、最低价和昨收价。</p>
@@ -620,7 +621,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#绘制"><span class="nav-number">1.</span> <span class="nav-text">绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制方法对比"><span class="nav-number">1.1.</span> <span class="nav-text">绘制方法对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#drawRect"><span class="nav-number">1.1.1.</span> <span class="nav-text">drawRect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CAShapeLayer"><span class="nav-number">1.1.2.</span> <span class="nav-text">CAShapeLayer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#股票"><span class="nav-number">1.2.</span> <span class="nav-text">股票</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#交易时间"><span class="nav-number">1.2.1.</span> <span class="nav-text">交易时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分时图"><span class="nav-number">1.2.2.</span> <span class="nav-text">分时图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图框"><span class="nav-number">1.2.3.</span> <span class="nav-text">图框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分时趋势"><span class="nav-number">1.2.4.</span> <span class="nav-text">分时趋势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#成交量"><span class="nav-number">1.2.5.</span> <span class="nav-text">成交量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#长按十字光标"><span class="nav-number">1.2.6.</span> <span class="nav-text">长按十字光标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文所处环境"><span class="nav-number">1.3.</span> <span class="nav-text">本文所处环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#绘制"><span class="nav-number">1.</span> <span class="nav-text">绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制方法对比"><span class="nav-number">1.1.</span> <span class="nav-text">绘制方法对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重写drawRect"><span class="nav-number">1.1.1.</span> <span class="nav-text">重写drawRect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用CAShapeLayer"><span class="nav-number">1.1.2.</span> <span class="nav-text">使用CAShapeLayer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#股票"><span class="nav-number">1.2.</span> <span class="nav-text">股票</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#交易时间"><span class="nav-number">1.2.1.</span> <span class="nav-text">交易时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分时图"><span class="nav-number">1.2.2.</span> <span class="nav-text">分时图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图框"><span class="nav-number">1.2.3.</span> <span class="nav-text">图框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分时趋势"><span class="nav-number">1.2.4.</span> <span class="nav-text">分时趋势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#成交量"><span class="nav-number">1.2.5.</span> <span class="nav-text">成交量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#长按十字光标"><span class="nav-number">1.2.6.</span> <span class="nav-text">长按十字光标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文所处环境"><span class="nav-number">1.3.</span> <span class="nav-text">本文所处环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -665,7 +666,7 @@
     <!-- 博客字数统计 -->
     <span class="site-pv">
       <i class="fa fa-pencil"></i>
-      博客全站共： <span class="post-count">9k</span> 字
+      博客全站共： <span class="post-count">9.1k</span> 字
     </span>
 </div>
 <!-- 新增访客统计代码 END-->
