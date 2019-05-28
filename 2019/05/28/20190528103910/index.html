@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="为什么会有动态化业务和功能的多样化和复杂度、以及不可避免的与H5相互交互，促使客户端必须探索出一种稳定且便于维护扩展的高效方案。在架构方向演进的过程中支付宝有了Nebula和小程序，读到这里我大致看了下这两个东西的功能。">
+<meta name="description" content="OTA (Over The Air)是苹果很早就支持的功能，目的是让企业用户脱离Appstore通过网页来发布app，想要实现OTA发布，首页要购买一个企业证书，价格是$299/年。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="本文为支付宝移动端动态化mPaas方案读后总结">
-<meta property="og:url" content="http://yoursite.com/2019/05/17/20190517153245/index.html">
+<meta property="og:title" content="使用Github发布iOS应用(OTA)">
+<meta property="og:url" content="http://yoursite.com/2019/05/28/20190528103910/index.html">
 <meta property="og:site_name" content="Aosic">
-<meta property="og:description" content="为什么会有动态化业务和功能的多样化和复杂度、以及不可避免的与H5相互交互，促使客户端必须探索出一种稳定且便于维护扩展的高效方案。在架构方向演进的过程中支付宝有了Nebula和小程序，读到这里我大致看了下这两个东西的功能。">
+<meta property="og:description" content="OTA (Over The Air)是苹果很早就支持的功能，目的是让企业用户脱离Appstore通过网页来发布app，想要实现OTA发布，首页要购买一个企业证书，价格是$299/年。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-17T11:57:40.672Z">
+<meta property="og:updated_time" content="2019-05-28T02:43:30.248Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="本文为支付宝移动端动态化mPaas方案读后总结">
-<meta name="twitter:description" content="为什么会有动态化业务和功能的多样化和复杂度、以及不可避免的与H5相互交互，促使客户端必须探索出一种稳定且便于维护扩展的高效方案。在架构方向演进的过程中支付宝有了Nebula和小程序，读到这里我大致看了下这两个东西的功能。">
+<meta name="twitter:title" content="使用Github发布iOS应用(OTA)">
+<meta name="twitter:description" content="OTA (Over The Air)是苹果很早就支持的功能，目的是让企业用户脱离Appstore通过网页来发布app，想要实现OTA发布，首页要购买一个企业证书，价格是$299/年。">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/05/17/20190517153245/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/28/20190528103910/">
 
 
 
 
 
-  <title>本文为支付宝移动端动态化mPaas方案读后总结 | Aosic</title>
+  <title>使用Github发布iOS应用(OTA) | Aosic</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/17/20190517153245/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/20190528103910/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Aosic">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">本文为支付宝移动端动态化mPaas方案读后总结</h1>
+          <h1 class="post-title" itemprop="name headline">使用Github发布iOS应用(OTA)</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-17T15:32:51+08:00">
-                2019-05-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-28T10:39:24+08:00">
+                2019-05-28
               </time>
             
 
@@ -309,7 +309,7 @@
 
           
           
-             <span id="/2019/05/17/20190517153245/" class="leancloud_visitors" data-flag-title="本文为支付宝移动端动态化mPaas方案读后总结">
+             <span id="/2019/05/28/20190528103910/" class="leancloud_visitors" data-flag-title="使用Github发布iOS应用(OTA)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -334,7 +334,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  347
+                  90
                 </span>
               
 
@@ -371,18 +371,14 @@
       
 
       
-        <h2 id="为什么会有动态化"><a href="#为什么会有动态化" class="headerlink" title="为什么会有动态化"></a>为什么会有动态化</h2><p>业务和功能的多样化和复杂度、以及不可避免的与H5相互交互，促使客户端必须探索出一种稳定且便于维护扩展的高效方案。在架构方向演进的过程中支付宝有了Nebula和小程序，读到这里我大致看了下这两个东西的功能。<br><a id="more"></a></p>
-<h3 id="Nebula，支付宝Hybrid方案"><a href="#Nebula，支付宝Hybrid方案" class="headerlink" title="Nebula，支付宝Hybrid方案"></a>Nebula，支付宝Hybrid方案</h3><ol>
-<li>H5容器</li>
-<li>H5&amp;Native交互</li>
-<li>H5埋点</li>
-</ol>
-<h3 id="支付宝小程序"><a href="#支付宝小程序" class="headerlink" title="支付宝小程序"></a>支付宝小程序</h3><p>这个是不是和微信小程序是一个东西</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>大厂的方案都是在轮子上包了个壳。</p>
-<p>支付宝小程序和微信小程序应该是有95%+的相似度，而Nebula则是内置了交互Api而且包含了一个本地服务器HttpServer。</p>
-<p>关于这个本地服务器，开源的方案有GCDWebServer、CocoaHTTPServer。</p>
-<p>我猜是在CocoaHTTPServer的基础上，然后有一套缓存资源、更新比对资源、加载已载资源的一套方案。当然在这个层面上又有关系加密方面的东西以保证数据安全。所有Html的网络请求均被拦截，由Native统一转发然后再模拟给Html页面。然后保证了包不会随便被别人抓取。</p>
-<p><a href="https://juejin.im/post/5bd3f516518825279a5f9694" target="_blank" rel="noopener">支付宝动态化</a><br><a href="https://github.com/swisspol/GCDWebServer" target="_blank" rel="noopener">GCDWebServer</a><br><a href="https://github.com/robbiehanson/CocoaHTTPServer" target="_blank" rel="noopener">CocoaHTTPServer</a><br><a href="https://juejin.im/post/5cd4fda8f265da03a00febe1" target="_blank" rel="noopener">iOS 性能优化 H5秒开方案汇总</a><br><a href="https://www.jianshu.com/p/a69e77bf680c" target="_blank" rel="noopener">基于 LocalWebServer 实现 WKWebView 离线资源加载</a></p>
+        <p>OTA (Over The Air)是苹果很早就支持的功能，目的是让企业用户脱离Appstore通过网页来发布app，想要实现OTA发布，首页要购买一个企业证书，价格是$299/年。<br><a id="more"></a></p>
+<p>相关链接</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/cbe394911c3d" target="_blank" rel="noopener">https://www.jianshu.com/p/cbe394911c3d</a></li>
+<li><a href="https://blog.csdn.net/a411360945/article/details/80026546" target="_blank" rel="noopener">https://blog.csdn.net/a411360945/article/details/80026546</a></li>
+<li><a href="https://blog.csdn.net/foreverdiy/article/details/47417369?utm_source=blogxgwz1" target="_blank" rel="noopener">https://blog.csdn.net/foreverdiy/article/details/47417369?utm_source=blogxgwz1</a></li>
+<li><a href="https://www.jianshu.com/p/b885f14b00e2" target="_blank" rel="noopener">https://www.jianshu.com/p/b885f14b00e2</a></li>
+</ul>
 
       
     </div>
@@ -407,8 +403,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/12/20190512013814/" rel="next" title="Xcode编辑区快捷键备注">
-                <i class="fa fa-chevron-left"></i> Xcode编辑区快捷键备注
+              <a href="/2019/05/26/20190526181910/" rel="next" title="iOS中关于分时K线绘制">
+                <i class="fa fa-chevron-left"></i> iOS中关于分时K线绘制
               </a>
             
           </div>
@@ -416,10 +412,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/20/20190520180155/" rel="prev" title="【转载】Xcode打包真机静态库脚本">
-                【转载】Xcode打包真机静态库脚本 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -489,17 +481,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -552,22 +535,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么会有动态化"><span class="nav-number">1.</span> <span class="nav-text">为什么会有动态化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nebula，支付宝Hybrid方案"><span class="nav-number">1.1.</span> <span class="nav-text">Nebula，支付宝Hybrid方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支付宝小程序"><span class="nav-number">1.2.</span> <span class="nav-text">支付宝小程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">2.</span> <span class="nav-text">结论</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
