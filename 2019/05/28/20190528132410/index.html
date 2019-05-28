@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="[toc] 隐式动画实现的背后体现了核心动画精心设计的许多机制。在layer的属性发生改变之后，会向它的代理方请求一个CAAction行为来完成后续的工作，系统允许代理方返回nil指针。一旦这么做，修改属性的工作最终移交给CATransaction处理，由修改的属性值决定是否自动生成一个CABasicAnimation。如果满足，此时隐式动画将被触发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转载】质量监控-隐式动画的性能瓶颈">
+<meta property="og:url" content="http://yoursite.com/2019/05/28/20190528132410/index.html">
+<meta property="og:site_name" content="Aosic">
+<meta property="og:description" content="[toc] 隐式动画实现的背后体现了核心动画精心设计的许多机制。在layer的属性发生改变之后，会向它的代理方请求一个CAAction行为来完成后续的工作，系统允许代理方返回nil指针。一旦这么做，修改属性的工作最终移交给CATransaction处理，由修改的属性值决定是否自动生成一个CABasicAnimation。如果满足，此时隐式动画将被触发。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/05/28/20190528132410/3.gif">
+<meta property="og:image" content="http://yoursite.com/2019/05/28/20190528132410/4.gif">
+<meta property="og:image" content="http://yoursite.com/2019/05/28/20190528132410/7.gif">
+<meta property="og:image" content="http://yoursite.com/2019/05/28/20190528132410/8.png">
+<meta property="og:updated_time" content="2019-05-28T05:33:47.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转载】质量监控-隐式动画的性能瓶颈">
+<meta name="twitter:description" content="[toc] 隐式动画实现的背后体现了核心动画精心设计的许多机制。在layer的属性发生改变之后，会向它的代理方请求一个CAAction行为来完成后续的工作，系统允许代理方返回nil指针。一旦这么做，修改属性的工作最终移交给CATransaction处理，由修改的属性值决定是否自动生成一个CABasicAnimation。如果满足，此时隐式动画将被触发。">
+<meta name="twitter:image" content="http://yoursite.com/2019/05/28/20190528132410/3.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/28/20190528132410/">
+
+
+
+
+
+  <title>【转载】质量监控-隐式动画的性能瓶颈 | Aosic</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aosic</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">那日少年薄春衫，明月照银簪。<br> 燕子归去时候，恨风疾云乱。<br> 志未酬，鬓先斑，梦已残。<br> 今生休去，人老沧海，心在天山！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/20190528132410/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aosic">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avwangshi.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aosic">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【转载】质量监控-隐式动画的性能瓶颈</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-28T13:24:46+08:00">
+                2019-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/28/20190528132410/" class="leancloud_visitors" data-flag-title="【转载】质量监控-隐式动画的性能瓶颈">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[toc]</p>
+<p><code>隐式动画</code>实现的背后体现了核心动画精心设计的许多机制。在<code>layer</code>的属性发生改变之后，会向它的代理方请求一个<code>CAAction</code>行为来完成后续的工作，系统允许代理方返回<code>nil</code>指针。一旦这么做，修改属性的工作最终移交给<code>CATransaction</code>处理，由修改的属性值决定是否自动生成一个<code>CABasicAnimation</code>。如果满足，此时隐式动画将被触发。</p>
+<a id="more"></a>
+<h2 id="关于CATransaction"><a href="#关于CATransaction" class="headerlink" title="关于CATransaction"></a>关于CATransaction</h2><p>在核心动画中，每个图层的修改都是事务<code>CATransaction</code>的一部分，它可以同时对多个<code>layer</code>的属性进行修改，然后成批的将将多个图层树包装起来，一次性发送到渲染服务进程。<code>CATransaction</code>事务对象被分为<code>implicit</code>和<code>explici</code>t两种类型，分别对应隐式和显式。<code>implicit transaction</code>会被投递到线程的下一个<code>runloop</code>完成处理：</p>
+<blockquote>
+<p>Core Animation supports two types of transactions: implicit transactions and explicit transactions. Implicit transactions are created automatically when the layer tree is modified by a thread without an active transaction and are committed automatically when the thread’s runloop next iterates.</p>
+</blockquote>
+<p>默认情况下，<code>CATransaction</code>会在背后独立完成图层树属性计算的工作。系统提供<code>API</code>来显式的使用事务类，并且手动提交给渲染服务进程，这种做法被称作推进过渡。推进过渡会生成一个默认时长为<code>0.25s</code>时长的动画效果来完成属性值的修改。下面代码会在<code>0.25s</code>内将图层放大一倍：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[CATransaction begin];</span><br><span class="line">self.circle.transform = CATransform3DScale(CATransform3DIdentity, 2, 2, 1);</span><br><span class="line">[CATransaction commit];</span><br></pre></td></tr></table></figure>
+<h2 id="layer如何实现动画"><a href="#layer如何实现动画" class="headerlink" title="layer如何实现动画"></a>layer如何实现动画</h2><p>图层属性被修改时，会朝着自己的代理对象请求一个<code>CAAction</code>行为来帮助自己完成属性修改的行为。代理方法<code>actionForLayer:forKey:</code>允许三种返回的数据格式来完成不同的修改动作：</p>
+<ul>
+<li>空对象<br><code>UIView</code>在响应代理时默认会返回一个<code>NSNull</code>对象，表示属性修改后，不实现任何的动作，根据修改后的属性值直接更新视图。但<code>UIView</code>不总是会返回空对象，如果<code>layer</code>的修改发生在<code>[UIView animatedXXX]</code>接口的<code>block</code>中，每一个修改的属性值UIView都会返回对应的<code>CABasicAnimation</code>对象来进行动画修改</li>
+<li><code>nil</code><br>手动创建并添加到视图上的<code>CALayer</code>或其子类在属性修改时，没有获取到具体的修改行为。此时被修改的属性会被<code>CATransaction</code>记录，最终在下一个<code>runloop</code>的回调中生成动画来响应本次属性修改。由于这个过程非开发者主动完成的，因此这种动画被称作隐式动画</li>
+<li><code>CAAction</code>的子类<br>如果返回的是<code>CAAction</code>对象，会直接开始动画来响应图层属性的修改。一般返回的对象多为<code>CABasicAnimation</code>类型，对象中包装了动画时长、动画初始/结束状态、动画时间曲线等关键信息。当<code>CAAction</code>对象被返回时，会立刻执行动作来响应本次属性修改</li>
+</ul>
+<h2 id="了解隐式动画的必要"><a href="#了解隐式动画的必要" class="headerlink" title="了解隐式动画的必要"></a>了解隐式动画的必要</h2><p>首先，<code>隐式动画</code>是相对于<code>显式动画</code>而言的，属于被动实现。由于<code>显式动画</code>是主动实现的，因此在实现这些动画的时候，我们会去考虑动画是否流畅，动画前后是否会有卡帧，也会不断的运行来保证动画效果如预期完成。而<code>隐式动画</code>多属于系统自己完成的动画效果，提供给我们的可调试空间也很小，这也导致了开发者对它的重视不够，从而阻碍了进一步深入学习的可能性。</p>
+<p>其次，和用户直接进行交互的就是<code>UI</code>元素。在发生卡帧、掉帧的性能问题时，用户对静止界面和动画的感知是完全不同的。即便只有<code>1</code>帧页面丢失，在动画中也能轻易的被用户捕捉。举个例子，当用户按下按钮，应用推迟了<code>1、2</code>帧才开始跳转。又或者是在界面跳转时丢失帧数据，具体表现为卡帧，此时用户对于卡顿的感知是远远大于平常的，因此了解<code>隐式动画</code>过程中如何发生卡顿是很有必要的。</p>
+<h2 id="隐式动画何时开始"><a href="#隐式动画何时开始" class="headerlink" title="隐式动画何时开始"></a>隐式动画何时开始</h2><p>隐式动画的修改最终由<code>CATransaction</code>事务完成，它在主线程的<code>runloop</code>注册了一个监听者，具体回调发生在<code>before waiting</code>阶段。在回调中会将所有<code>implicit transactions</code>以动画的形式展示。虽然苹果文档没有明说具体的回调时机，但通过简单的测试可以定位transaction的回调时间：通过注册两个<code>runloop</code>监听者，回调优先级分别设为<code>NSIntegerMax</code>和<code>NSIntegerMin</code>，监控最早和最晚的回调阶段，并且在对应位置添加断点，查看断点前后图层是否更新：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    CFRunLoopObserverContext ctx = &#123; 0, (__bridge void *)self, NULL, NULL &#125;;</span><br><span class="line">    CFRunLoopObserverRef allActivitiesObserver = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopBeforeWaiting, YES, NSIntegerMin, &amp;__runloop_callback, &amp;ctx);</span><br><span class="line">    CFRunLoopAddObserver(CFRunLoopGetCurrent(), allActivitiesObserver, kCFRunLoopCommonModes);</span><br><span class="line">    </span><br><span class="line">    CFRunLoopObserverRef beforeWaitingObserver = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopBeforeWaiting, YES, NSIntegerMax, &amp;__runloop_before_waiting_callback, &amp;ctx);</span><br><span class="line">    CFRunLoopAddObserver(CFRunLoopGetCurrent(), beforeWaitingObserver, kCFRunLoopCommonModes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>手动创建的<code>CALayer</code>在属性修改会产生隐式动画，将<code>layer</code>增加到视图层级上后，点击按钮来修改它的<code>transform</code>属性，并且观察断点前后的效果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">self.circle = [CAShapeLayer layer];</span><br><span class="line">self.circle.delegate = self;</span><br><span class="line">self.circle.anchorPoint = CGPointMake(0.5, 0.5);</span><br><span class="line">self.circle.fillColor = [UIColor orangeColor].CGColor;</span><br><span class="line">self.circle.path = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMidX([UIScreen mainScreen].bounds) - 50, 80, 100, 100)].CGPath;</span><br><span class="line">[self.view.layer addSublayer: self.circle];</span><br></pre></td></tr></table></figure>
+<p>通过断点和界面显示可以看到在<code>Before Waiting</code>阶段的两次回调之间，<code>transaction</code>完成了属性修改的渲染任务（在<code>DEBUG+断点</code>状态下，隐式动画不能很好的完成动画效果）：</p>
+
+
+<p>通过上面的测试可以确定<code>transaction</code>的事务处理确实发生在<code>before waiting</code>阶段。但由于注册<code>observer</code>时传入的优先级可以影响回调顺序，为了排除回调顺序可能对测试的干扰，可以通过<code>hook</code>掉<code>CFRunLoopAddObserver</code>这一注册函数，来获取已有的所有注册<code>before waiting</code>的回调信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void new_runloopAddObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFRunLoopMode mode) &#123;</span><br><span class="line">    CFOptionFlags activities = CFRunLoopObserverGetActivities(observer);</span><br><span class="line">    if (activities &amp; kCFRunLoopBeforeWaiting) &#123;</span><br><span class="line">        CFRunLoopObserverContext context;</span><br><span class="line">        CFRunLoopObserverGetContext(observer, &amp;context);</span><br><span class="line">        void *info = context.info;</span><br><span class="line">        NSLog(@&quot;%d, %@&quot;, CFRunLoopObserverGetOrder(observer), (__bridge id)info);</span><br><span class="line">    &#125;</span><br><span class="line">    origin_CFRunLoopAddObserver(rl, observer, mode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行后应用注册了<code>5</code>个包含<code>before waiting</code>状态的<code>observer</code>，优先级分别是最小为<code>0</code>，最大为<code>2147483647</code>，也就是<code>0 ~ 2^31-1</code>，处于<code>NSIntegerMin</code>和<code>NSIntergerMax</code>之间，足以确定测试的正确性。</p>
+<h2 id="隐式动画的性能瓶颈"><a href="#隐式动画的性能瓶颈" class="headerlink" title="隐式动画的性能瓶颈"></a>隐式动画的性能瓶颈</h2><p>通过上面的测试，可知layer的隐式动画发生在before waiting这一阶段。那么理论上来说，假如在两个监听回调之间发生了卡顿，应该会对动画效果造成影响。另外，卡顿的时机可能也会影响动画的效果。分别在transaction的回调让主线程进入休眠来测试不同时机的卡顿对动画造成的效果，上面的测试证明了注册的两个已有回调可以用于制作不同时机的卡顿：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSLog(@&quot;ready sleep&quot;);</span><br><span class="line">[NSThread sleepForTimeInterval: 1];</span><br><span class="line">NSLog(@&quot;after sleep&quot;);</span><br></pre></td></tr></table></figure>
+<p>先于<code>CATransaction</code>回调发生卡顿。点击按钮后，界面卡顿<code>1s</code>，然后才开始执行动画。期间多次点击按钮无效：</p>
+<img src="/2019/05/28/20190528132410/3.gif" width="3">
+<p>后于<code>CATransaction</code>回调发生卡顿。点击按钮后，动画立刻开始执行。界面会停止响应<code>1s</code>，同样卡顿期间不响应点击。动画存在卡帧现象，但不严重：</p>
+<img src="/2019/05/28/20190528132410/4.gif" width="4">
+<p>在<code>transaction</code>前后制作卡顿确实产生了不同的效果，但是即便更换卡顿的时机，动画效果仍是比较流畅的，这证明了渲染、展示过程和主线程可能是并发执行的。实际上在<code>WWDC2014</code>的视频中有对图层渲染过程的详细讲述，隐式动画遵循这样的渲染过程。图层渲染过程分为三个阶段：</p>
+
+<ol>
+<li><code>Commit Transaction + Decode</code><br><code>transaction</code>此时会将被修改的一个或者多个<code>layer</code>的属性统一计算，更新modelLayer属性，然后将图层信息整合提交渲染服务进程。渲染服务进程反序列化获取渲染树信息，并准备开始渲染</li>
+<li><code>Draw Calls + Render</code><br>渲染服务进程根据渲染树信息，计算出动画的帧数和图层信息。此时GPU利用渲染树开始合成位图并准备展示到屏幕上</li>
+<li><code>Display</code><br>将渲染好的位图信息展示到屏幕上，如果存在动画则逐帧展示。如果在<code>transaction</code>后发生卡顿，会对动画展示造成一定的影响，但影响程度相对较低</li>
+</ol>
+<p>结合渲染服务进程的工作流程，可以知道实际上<code>transaction</code>的工作是<code>1</code>，在<code>transaction</code>回调结束时已经将图层树提交给渲染服务进程了，因此之后即便主线程发生卡顿，也不会影响渲染服务进程的工作。而早于<code>transaction</code>回调发生的卡顿会导致应用不能将图层树及时的提交到渲染服务进程，从而造成了动画开始前的界面停滞现象。</p>
+<h2 id="显式动画何时开始"><a href="#显式动画何时开始" class="headerlink" title="显式动画何时开始"></a>显式动画何时开始</h2><p>说完了<code>隐式动画</code>如何开始、瓶颈等信息，对应的也理当说说<code>显式动画</code>。虽然直接响应属性修改是<code>显式动画</code>的最大特点，但通过已有的测试可以直接证明这一点。修改<code>CALayerDelegate</code>的代理方法，主动返回一个<code>CABasicAnimation</code>对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - CALayerDelegate</span><br><span class="line">- (id&lt;CAAction&gt;)actionForLayer: (CALayer *)layer forKey: (NSString *)event &#123;</span><br><span class="line">    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath: event];</span><br><span class="line">    CGFloat randomScale = (arc4random() % 20 + 1) * 0.1;</span><br><span class="line">    animation.toValue = [NSValue valueWithCATransform3D: CATransform3DScale(CATransform3DIdentity, randomScale, randomScale, 1)];</span><br><span class="line">    return animation;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样添加断点进行测试，运行后可以看到在动画开始之后，断点才会停下来。也可以确定虽然<code>transaction</code>虽然也负责了<code>显式动画</code>的渲染事务，但会立即<code>commit</code>到渲染服务进程响应属性修改。</p>
+<h2 id="转场卡顿"><a href="#转场卡顿" class="headerlink" title="转场卡顿"></a>转场卡顿</h2><p>默认的转场动画实际上也是由<code>transaction</code>来完成的，属于<code>隐式动画</code>。通过<code>hook</code>掉获取<code>CAAction</code>的代理方法，在忽略掉<code>nil</code>和<code>NSNull</code>的无效返回值后，一个<code>push</code>跳转动画总共涉及到了三个<code>CAAction</code>子类。从类名上来看<code>_UIViewAdditiveAnimationAction</code>是和转场动画关联最密切的子类，也证明了系统默认的转场跳转实际上也是交给了<code>transaction</code>机制来处理的。另外从log上的执行来看，转场实际上也属于<code>隐式动画</code>：</p>
+
+<p>转场卡顿从效果上看能分为<code>转场前卡顿</code>和<code>转场后卡顿</code>，后者属于常见的的转场性能瓶颈，大多由于新界面视图层级复杂、大量<code>IO</code>等工作导致，是最容易定位的一类问题。而前者属于少见，且不容易定位的卡顿现象之一。结合上面的测试，如果发生了<code>转场前卡顿</code>，那么说明渲染工作在<code>1</code>开始之前就发生了卡顿。</p>
+<img src="/2019/05/28/20190528132410/7.gif" width="7">
+<p>在上面的<code>log</code>中可以看到<code>viewDidLoad</code>和<code>viewWillAppear</code>的调用同样处在<code>before waiting</code>阶段。假设这两个方法的调用时机在<code>transaction</code>前面，那么一旦两个方法发生了卡顿，肯定会跳转动画卡帧后执行的效果。通过分别在两个方法中添加<code>sleep</code>操作测试，还原了<code>gif</code>的卡顿效果。因此可以得出转场动画过程中的流程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view did load --&gt; view will appear --&gt; CATransaction callback --&gt; animate</span><br></pre></td></tr></table></figure>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>虽然苹果文档和测试结果都说明了一件事情：<code>transaction</code>的回调处在<code>before waiting</code>阶段，但是否存在可能：<code>runloop</code>无法进入<code>before waiting</code>呢？实际上这种可能是完全存在的，根据苹果文档中的描述，下图可以用来表示<code>runloop</code>的内部逻辑：</p>
+<img src="/2019/05/28/20190528132410/8.png" width="8">
+<p>假如<code>runloop</code>中一直有<code>source1</code>事件，那么会一直在<code>2、3、4、5、9</code>之间循环处理。而<code>touches</code>发生时，就是典型的持续<code>source1</code>事件环境。换句话说，如果用户一直在滚动列表，那么<code>before waiting</code>将不会到来。但实际在应用使用中，即便是手指不离开屏幕，<code>cell</code>依旧能够展示各种动画。因此可以推断出<code>transaction</code>至少还注册了<code>UITracking</code>这个模式下的<code>runloop</code>监听处理，感兴趣的同学可以在滚动列表上采用类似的手段测试具体的处理时机。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>由于<code>隐式动画</code>的特殊性质，我们与之打交道的地方基本在页面跳转环节，一旦这个过程发生了卡顿，无论是<code>跳转前卡顿</code>或者是<code>跳转后卡顿</code>，都会使得应用的体验大打折扣。总结了一下，在日常开发中，我们与<code>隐式动画</code>打交道时记住几点：</p>
+<p><code>隐式动画</code>开始前的卡顿是因为<code>CATransaction</code>回调前其他任务占用了大量的<code>CPU</code>资源，通过懒加载、延后加载、异步执行可以有效的避免这个问题<br><code>viewDidLoad</code>和<code>viewWillAppear</code>是一丘之貉，它们都会导致<code>转场动画前</code>的卡顿。所以如果你将前者的工作放到后者执行，并没有任何作用<br>动画在开始之后，即便是应用发生卡顿，对动画的影响也要低于先于<code>transaction</code>的卡顿。因此如果你不知道如何优化动画前的烂摊子，那么放到动画开始之后吧</p>
+<p>作者：sindrilin<br>来源：sindrilin的小巢<br>原文：<a href="http://sindrilin.com/2017/12/14/bottleeneck_of_transacation.html" target="_blank" rel="noopener">http://sindrilin.com/2017/12/14/bottleeneck_of_transacation.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/28/20190528103910/" rel="next" title="使用Github发布iOS应用(OTA)">
+                <i class="fa fa-chevron-left"></i> 使用Github发布iOS应用(OTA)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+  <!-- Link Gitalk 的支持文件  -->
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
+<div id="gitalk-container"></div>     <script type="text/javascript">
+    var gitalk = new Gitalk({
+
+        clientID: '8f77045be0ee996a5f7b',
+        clientSecret: '477110e4d2563b3bca946a460c349876b0cea41f',
+        repo: 'aosic.github.io',
+        owner: 'aosic',
+        admin: ['aosic'],
+        id: decodeURI(window.location.pathname),
+
+    });
+    gitalk.render('gitalk-container');
+</script> 
+<!-- Gitalk end -->
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avwangshi.png" alt="Aosic">
+            
+              <p class="site-author-name" itemprop="name">Aosic</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于CATransaction"><span class="nav-number">1.</span> <span class="nav-text">关于CATransaction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#layer如何实现动画"><span class="nav-number">2.</span> <span class="nav-text">layer如何实现动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#了解隐式动画的必要"><span class="nav-number">3.</span> <span class="nav-text">了解隐式动画的必要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐式动画何时开始"><span class="nav-number">4.</span> <span class="nav-text">隐式动画何时开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐式动画的性能瓶颈"><span class="nav-number">5.</span> <span class="nav-text">隐式动画的性能瓶颈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显式动画何时开始"><span class="nav-number">6.</span> <span class="nav-text">显式动画何时开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转场卡顿"><span class="nav-number">7.</span> <span class="nav-text">转场卡顿</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">8.</span> <span class="nav-text">补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">9.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aosic</span>
+
+  
+</div>
+
+<!-- 新增访客统计代码 -->
+
+<div class="busuanzi-count">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      访问用户： <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+    <div class="powered-by"></div>
+    <span class="site-uv">
+      <i class="fa fa-eye"></i>
+      访问次数： <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+    <!-- 博客字数统计 -->
+    <span class="site-pv">
+      <i class="fa fa-pencil"></i>
+      博客全站共： <span class="post-count">13.6k</span> 字
+    </span>
+</div>
+<!-- 新增访客统计代码 END-->
+
+<!-- 在网页底部添加网站运行时间 -->
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("07/21/2018 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "Run for "+dnum+" Days ";
+        document.getElementById("times").innerHTML = hnum + " Hours " + mnum + " m " + snum + " s";
+    }
+setInterval("createtime()",250);
+</script>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("DYUfD9W3sqMHQRfY7T8jUmU1-gzGzoHsz", "kwIdVluFzoVhoY1NyYhejJ5p");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
