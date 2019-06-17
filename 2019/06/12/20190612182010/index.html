@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Aosic">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta name="description" content="iOS项目进阶汇总持续跟进[toc]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS优化">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/20190612182010/index.html">
 <meta property="og:site_name" content="Aosic">
+<meta property="og:description" content="iOS项目进阶汇总持续跟进[toc]">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-17T17:05:38.930Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Aosic">
+<meta name="twitter:title" content="iOS优化">
+<meta name="twitter:description" content="iOS项目进阶汇总持续跟进[toc]">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/3/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/20190612182010/">
 
 
 
 
 
-  <title>Aosic</title>
+  <title>iOS优化 | Aosic</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,9 +247,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -259,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/26/20190426135941/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/20190612182010/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Aosic">
@@ -276,9 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/26/20190426135941/" itemprop="url">UICollectionview开篇</a></h1>
+          <h1 class="post-title" itemprop="name headline">iOS优化</h1>
         
 
         <div class="post-meta">
@@ -290,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-26T13:59:41+08:00">
-                2019-04-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-12T18:21:03+08:00">
+                2019-06-12
               </time>
             
 
@@ -308,7 +309,7 @@
 
           
           
-             <span id="/2019/04/26/20190426135941/" class="leancloud_visitors" data-flag-title="UICollectionview开篇">
+             <span id="/2019/06/12/20190612182010/" class="leancloud_visitors" data-flag-title="iOS优化">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -333,7 +334,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  115
+                  522
                 </span>
               
 
@@ -370,21 +371,43 @@
       
 
       
-        
-          
-            <p>一直以来都想仔细研究一下UICollectionView，但是对齐分配的时间一直都是零散的。于是有了今天下定决心，从头梳理一遍UICollectionView以做整理。</p>
-<p>本篇作为一个规划，后续关于UICollectionView到底整理哪一方面。</p>
-<ol>
-<li>UICollectionView的基本运用</li>
-<li>UICollectionViewLayout</li>
-<li>定制需要的注意事项 </li>
-<li>PSTCollectionview解读</li>
-<li>轮播以及第三方</li>
-</ol>
-<p>后续文章会不定期更新，争取最少一周一篇。</p>
+        <h1 id="iOS项目进阶汇总持续跟进"><a href="#iOS项目进阶汇总持续跟进" class="headerlink" title="iOS项目进阶汇总持续跟进"></a>iOS项目进阶汇总持续跟进</h1><p>[toc]</p>
+<a id="more"></a>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><h3 id="功能划分"><a href="#功能划分" class="headerlink" title="功能划分"></a>功能划分</h3><h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><h3 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h3><h3 id="工程体积"><a href="#工程体积" class="headerlink" title="工程体积"></a>工程体积</h3><h4 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h4><ul>
+<li>瘦身</li>
+<li>图片无损压缩</li>
+</ul>
+<h4 id="代码管理"><a href="#代码管理" class="headerlink" title="代码管理"></a>代码管理</h4><ul>
+<li>无用代码移除</li>
+<li>重复代码抽象整理</li>
+</ul>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><h3 id="FPS"><a href="#FPS" class="headerlink" title="FPS"></a>FPS</h3><h3 id="动画卡顿"><a href="#动画卡顿" class="headerlink" title="动画卡顿"></a>动画卡顿</h3><h4 id="图层混合"><a href="#图层混合" class="headerlink" title="图层混合"></a>图层混合</h4><h4 id="图片大小"><a href="#图片大小" class="headerlink" title="图片大小"></a>图片大小</h4><h4 id="离屏渲染"><a href="#离屏渲染" class="headerlink" title="离屏渲染"></a>离屏渲染</h4><p>哪些场景可以触发离屏渲染？</p>
+<ul>
+<li>shouldRasterize（光栅化）</li>
+<li>masks（遮罩）</li>
+<li>shadows（阴影）</li>
+<li>edge antialiasing（抗锯齿）</li>
+<li>group opacity（不透明）</li>
+<li>复杂形状设置圆角等</li>
+<li>渐变</li>
+</ul>
+<h2 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h2><h3 id="网络请求"><a href="#网络请求" class="headerlink" title="网络请求"></a>网络请求</h3><h3 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h3><p>任何情况下，release环境下不应该有任何log。</p>
+<h3 id="数据持久化"><a href="#数据持久化" class="headerlink" title="数据持久化"></a>数据持久化</h3><h4 id="密钥"><a href="#密钥" class="headerlink" title="密钥"></a>密钥</h4><h4 id="钥匙串"><a href="#钥匙串" class="headerlink" title="钥匙串"></a>钥匙串</h4><p>避免使用钥匙串保存隐私、重要的信息。可以考虑由后台提供中间件服务，根据账号绑定后台存储数据通过RSA来保证安全性。同时也实现了多设备同步。</p>
+<h4 id="数据库配置文件"><a href="#数据库配置文件" class="headerlink" title="数据库配置文件"></a>数据库配置文件</h4><p>从安全性的角度考虑这里只保存普通文件或者仅限生成的缓存文件等，但是为了控制使用空间不会无节制的增加，得考虑给其设计LRU类似淘汰算法。</p>
+<h4 id="应用防护"><a href="#应用防护" class="headerlink" title="应用防护"></a>应用防护</h4><ul>
+<li>代码混淆 方法名通过脚本替换 ，难读、崩溃难以定位（不推荐）</li>
+<li>第三方 如爱加密等，工具需要跟随Xcode升级、且可能导致某些系统机型应用无法正常使用，出问题基本无法排查。 （不推荐）</li>
+</ul>
+<p>不需要单独做额外的应用防护，因为防护也主要针对隐私安全性。但是这个应该考虑到最初始的设计，如果这方面都不依赖与客户端，那么攻击针对也无济于事。</p>
+<h2 id="UI"><a href="#UI" class="headerlink" title="UI"></a>UI</h2><p>任何情况下，UI都要尽可能的好看，每个人都是颜控。</p>
+<h2 id="可维护性"><a href="#可维护性" class="headerlink" title="可维护性"></a>可维护性</h2><ul>
+<li>RunTime是利器也是凶器，除了json转模型和无码埋点如果使用应考虑设计问题</li>
+<li>对于UI的调整维护的便捷程度，包括视图数据整合情况</li>
+</ul>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><blockquote>
+<p><a href="https://juejin.im/post/5cf8cef85188255f0a4e0bc8" target="_blank" rel="noopener">https://juejin.im/post/5cf8cef85188255f0a4e0bc8</a><br><a href="https://www.jianshu.com/p/4ff579d86fae" target="_blank" rel="noopener">https://www.jianshu.com/p/4ff579d86fae</a></p>
+</blockquote>
 
-          
-        
       
     </div>
     
@@ -401,12 +424,32 @@
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/04/20190604161110/" rel="next" title="如何在Xcode工程中配置编译参数">
+                <i class="fa fa-chevron-left"></i> 如何在Xcode工程中配置编译参数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/18/20190618004710/" rel="prev" title="NSOperation中的定时器">
+                NSOperation中的定时器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -416,512 +459,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/25/20180225152205/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Aosic">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avwangshi.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aosic">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/25/20180225152205/" itemprop="url">OC类型转换与桥接拾遗</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-25T15:22:05+08:00">
-                2018-02-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/02/25/20180225152205/" class="leancloud_visitors" data-flag-title="OC类型转换与桥接拾遗">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  428
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="ARC下地址转id类型"><a href="#ARC下地址转id类型" class="headerlink" title="ARC下地址转id类型"></a>ARC下地址转id类型</h2>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/25/20180225152205/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/24/20180224152205/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Aosic">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avwangshi.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aosic">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/24/20180224152205/" itemprop="url">git与svn关键字对比</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-24T15:22:05+08:00">
-                2018-02-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/02/24/20180224152205/" class="leancloud_visitors" data-flag-title="git与svn关键字对比">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  278
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Git-svn命令对比表<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/24/20180224152205/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/23/20170223175056/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Aosic">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avwangshi.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Aosic">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/02/23/20170223175056/" itemprop="url">由reloadSctions引发的崩溃问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-23T17:50:56+08:00">
-                2017-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/02/23/20170223175056/" class="leancloud_visitors" data-flag-title="由reloadSctions引发的崩溃问题">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  167
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>   使用UITableView时，对分组做展开操作调用reloadSections::引发崩溃。崩溃在main中，无法准确定位。崩溃log如下：<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/23/20170223175056/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-  </nav>
-
 
 
           </div>
@@ -929,6 +471,28 @@
 
 
           
+
+  
+
+  <!-- Link Gitalk 的支持文件  -->
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
+<div id="gitalk-container"></div>     <script type="text/javascript">
+    var gitalk = new Gitalk({
+
+        clientID: '8f77045be0ee996a5f7b',
+        clientSecret: '477110e4d2563b3bca946a460c349876b0cea41f',
+        repo: 'aosic.github.io',
+        owner: 'aosic',
+        admin: ['aosic'],
+        id: decodeURI(window.location.pathname),
+
+    });
+    gitalk.render('gitalk-container');
+</script> 
+<!-- Gitalk end -->
+
+
 
         </div>
         
@@ -949,8 +513,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1003,6 +576,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS项目进阶汇总持续跟进"><span class="nav-number">1.</span> <span class="nav-text">iOS项目进阶汇总持续跟进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目结构"><span class="nav-number">1.1.</span> <span class="nav-text">项目结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#功能划分"><span class="nav-number">1.1.1.</span> <span class="nav-text">功能划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计模式"><span class="nav-number">1.1.2.</span> <span class="nav-text">设计模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块化"><span class="nav-number">1.1.3.</span> <span class="nav-text">模块化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工程体积"><span class="nav-number">1.1.4.</span> <span class="nav-text">工程体积</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#资源管理"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">资源管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码管理"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">代码管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能"><span class="nav-number">1.2.</span> <span class="nav-text">性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存"><span class="nav-number">1.2.1.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FPS"><span class="nav-number">1.2.2.</span> <span class="nav-text">FPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动画卡顿"><span class="nav-number">1.2.3.</span> <span class="nav-text">动画卡顿</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#图层混合"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">图层混合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图片大小"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">图片大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#离屏渲染"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">离屏渲染</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全"><span class="nav-number">1.3.</span> <span class="nav-text">安全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络请求"><span class="nav-number">1.3.1.</span> <span class="nav-text">网络请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志"><span class="nav-number">1.3.2.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据持久化"><span class="nav-number">1.3.3.</span> <span class="nav-text">数据持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#密钥"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#钥匙串"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">钥匙串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库配置文件"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">数据库配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用防护"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">应用防护</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UI"><span class="nav-number">1.4.</span> <span class="nav-text">UI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可维护性"><span class="nav-number">1.5.</span> <span class="nav-text">可维护性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">1.6.</span> <span class="nav-text">引用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1171,6 +760,10 @@ setInterval("createtime()",250);
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
