@@ -105,17 +105,17 @@
 
 
 
-<meta name="description" content="如何在Xcode工程中配置编译参数[toc] 前言最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 loslib.c:143:14: error: &amp;#39;system&amp;#39; is unavailable: not available on iOS">
+<meta name="description" content="如何在Xcode工程中配置编译参数前言最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 loslib.c:143:14: error: &amp;#39;system&amp;#39; is unavailable: not available on iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在Xcode工程中配置编译参数">
 <meta property="og:url" content="http://yoursite.com/2019/06/04/20190604161110/index.html">
 <meta property="og:site_name" content="Aosic">
-<meta property="og:description" content="如何在Xcode工程中配置编译参数[toc] 前言最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 loslib.c:143:14: error: &amp;#39;system&amp;#39; is unavailable: not available on iOS">
+<meta property="og:description" content="如何在Xcode工程中配置编译参数前言最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 loslib.c:143:14: error: &amp;#39;system&amp;#39; is unavailable: not available on iOS">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-04T08:23:12.667Z">
+<meta property="og:updated_time" content="2019-09-03T14:13:08.339Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在Xcode工程中配置编译参数">
-<meta name="twitter:description" content="如何在Xcode工程中配置编译参数[toc] 前言最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 loslib.c:143:14: error: &amp;#39;system&amp;#39; is unavailable: not available on iOS">
+<meta name="twitter:description" content="如何在Xcode工程中配置编译参数前言最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 loslib.c:143:14: error: &amp;#39;system&amp;#39; is unavailable: not available on iOS">
 
 
 
@@ -360,7 +360,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  192
+                  190
                 </span>
               
 
@@ -397,8 +397,7 @@
       
 
       
-        <h1 id="如何在Xcode工程中配置编译参数"><a href="#如何在Xcode工程中配置编译参数" class="headerlink" title="如何在Xcode工程中配置编译参数"></a>如何在Xcode工程中配置编译参数</h1><p>[toc]</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 <code>loslib.c:143:14: error: &#39;system&#39; is unavailable: not available on iOS</code></p>
+        <h1 id="如何在Xcode工程中配置编译参数"><a href="#如何在Xcode工程中配置编译参数" class="headerlink" title="如何在Xcode工程中配置编译参数"></a>如何在Xcode工程中配置编译参数</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在内联lua，使用了LuaScriptCore这个开源代码。使用的是源码，build的时候发现报错 <code>loslib.c:143:14: error: &#39;system&#39; is unavailable: not available on iOS</code></p>
 <a id="more"></a>
 <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>报错的原因是因为需要设置编译参数<code>TARGET_OS_IPHONE</code>，在<code>Xcode</code>工程中有三种方式设置编译参数</p>
 <ol>
@@ -548,7 +547,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -639,7 +638,7 @@
     <!-- 博客字数统计 -->
     <span class="site-pv">
       <i class="fa fa-pencil"></i>
-      博客全站共： <span class="post-count">12.2k</span> 字
+      博客全站共： <span class="post-count">12.5k</span> 字
     </span>
 </div>
 <!-- 新增访客统计代码 END-->
